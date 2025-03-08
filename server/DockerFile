@@ -1,0 +1,8 @@
+# server/Dockerfile
+FROM eclipse-temurin:23-jre
+
+WORKDIR /app
+COPY server/build/libs/taskmanagement-server.jar app.jar
+
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]
