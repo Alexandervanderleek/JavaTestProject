@@ -1,5 +1,5 @@
 # server/Dockerfile
-FROM eclipse-temurin:23-jre
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 COPY server/build/libs/taskmanagement-server.jar app.jar
