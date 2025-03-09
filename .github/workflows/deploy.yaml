@@ -62,15 +62,18 @@ jobs:
       id: get_endpoint
       run: |
         cd infrastructure/terraform
-        echo "db_endpoint=$(terraform output -raw db_endpoint)" >> $GITHUB_OUTPUT
+        DB_ENDPOINT=$(terraform output -raw db_endpoint)
+        echo "DB endpoint is: $DB_ENDPOINT"
+        echo "db_endpoint=$DB_ENDPOINT" >> $GITHUB_ENV
 
     - name: Run Flyway Migration
       run: |
+        echo "Using DB endpoint: $db_endpoint"
         ./gradlew flywayMigrate \
-          -Dflyway.url=jdbc:postgresql://${{ steps.get_endpoint.outputs.db_endpoint }}/taskmanagement \
+          -Dflyway.url=jdbc:postgresql://$db_endpoint/taskmanagement \
           -Dflyway.user=${{ secrets.DB_USERNAME }} \
           -Dflyway.password=${{ secrets.DB_PASSWORD }}
-    
+
     - name: Force new deployment
       run: |
         aws ecs update-service --cluster task-management-cluster --service task-management-service --force-new-deployment
