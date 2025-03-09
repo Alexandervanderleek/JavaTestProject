@@ -6,6 +6,12 @@ terraform {
       version = "~> 5.0"
     }
   }
+
+  backend "s3" {
+    bucket = "taskmanagetfbucket"
+    key = "terraform.tfstate"
+    region = "eu-west-3"
+  }
 }
 
 provider "aws" {
