@@ -68,7 +68,13 @@ public class AuthService {
         newUser.setId(UUID.randomUUID());
         newUser.setGoogleId(googleUserInfo.getGoogleId());
         newUser.setEmail(googleUserInfo.getEmail());
-        newUser.setName(googleUserInfo.getName());
+
+        String name = googleUserInfo.getName();
+        if (name == null || name.trim().isEmpty()) {
+            name = googleUserInfo.getEmail().split("@")[0]; // Use part before @ as name
+        }
+        newUser.setName(name);
+
         newUser.setRole(defaultRole);
 
         return userRepository.save(newUser);

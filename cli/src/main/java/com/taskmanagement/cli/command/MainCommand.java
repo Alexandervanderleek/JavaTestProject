@@ -48,8 +48,13 @@ public class MainCommand implements Callable<Integer>, CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        // Don't exit the application immediately
         int exitCode = commandLine.execute(args);
-        System.exit(exitCode);
+        if (args.length == 0) {
+            // If no command was provided, just show the help info
+            commandLine.usage(System.out);
+        }
+        // Don't call System.exit() here
     }
 
     @Override

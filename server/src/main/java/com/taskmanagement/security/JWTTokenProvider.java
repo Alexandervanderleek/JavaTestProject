@@ -47,7 +47,7 @@ public class JWTTokenProvider {
                 .claim(AUTHORITIES_KEY, authorities.stream()
                         .map(GrantedAuthority::getAuthority)
                         .collect(Collectors.joining(",")))
-                .signWith(key, SignatureAlgorithm.HS512)
+                .signWith(key, SignatureAlgorithm.HS256)
                 .setExpiration(validity)
                 .compact();
     }
