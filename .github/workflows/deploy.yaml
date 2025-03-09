@@ -57,12 +57,17 @@ jobs:
     - name: Upload CLI to S3
       run: |
         aws s3 cp cli/build/libs/taskmanagement-cli.jar s3://task-management-cli/taskmanagement-cli-latest.jar
-    
+
+    - name: Get DB Endpoint
+      id: get_endpoint
+      run: |
+        cd infrastructure/terraform
+        echo "db_endpoint=$(terraform output -raw db_endpoint)" >> $GITHUB_OUTPUT
+
     - name: Run Flyway Migration
       run: |
-        DB_ENDPOINT=$(cd infrastructure/terraform && terraform output -raw db_endpoint)
         ./gradlew flywayMigrate \
-          -Dflyway.url=jdbc:postgresql://$DB_ENDPOINT/taskmanagement \
+          -Dflyway.url=jdbc:postgresql://${{ steps.get_endpoint.outputs.db_endpoint }}/taskmanagement \
           -Dflyway.user=${{ secrets.DB_USERNAME }} \
           -Dflyway.password=${{ secrets.DB_PASSWORD }}
     
