@@ -29,10 +29,14 @@ variable "google_client_id" {
   sensitive   = true
 }
 
-# RDS PostgreSQL database
+# Update your DB subnet group to use the two public subnets
 resource "aws_db_subnet_group" "db_subnet_group" {
   name       = "${var.project_name}-db-subnet"
-  subnet_ids = [aws_subnet.private.id, aws_subnet.public.id]
+  subnet_ids = [aws_subnet.public_1.id, aws_subnet.public_2.id]
+
+  tags = {
+    Name = "${var.project_name}-db-subnet"
+  }
 }
 
 resource "aws_db_instance" "postgres" {
@@ -130,7 +134,7 @@ resource "aws_ecs_service" "app_service" {
   launch_type     = "FARGATE"
 
   network_configuration {
-    subnets          = [aws_subnet.public.id]
+    subnets          = [aws_subnet.public_1.id]
     security_groups  = [aws_security_group.ecs_sg.id]
     assign_public_ip = true
   }

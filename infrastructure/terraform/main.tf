@@ -29,26 +29,26 @@ resource "aws_vpc" "main" {
   }
 }
 
-# Create public subnet
-resource "aws_subnet" "public" {
+# Replace your existing subnets with two public subnets in different AZs
+resource "aws_subnet" "public_1" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.1.0/24"
   availability_zone       = "${var.aws_region}a"
-  map_public_ip_on_launch = true
-  
+  map_public_ip_on_launch = true  # This makes it a public subnet
+
   tags = {
-    Name = "${var.project_name}-public-subnet"
+    Name = "${var.project_name}-public-subnet-1"
   }
 }
 
-# Create private subnet
-resource "aws_subnet" "private" {
+resource "aws_subnet" "public_2" {
   vpc_id                  = aws_vpc.main.id
   cidr_block              = "10.0.2.0/24"
   availability_zone       = "${var.aws_region}b"
-  
+  map_public_ip_on_launch = true  # This makes it a public subnet
+
   tags = {
-    Name = "${var.project_name}-private-subnet"
+    Name = "${var.project_name}-public-subnet-2"
   }
 }
 
@@ -76,8 +76,13 @@ resource "aws_route_table" "public" {
 }
 
 # Route table association
-resource "aws_route_table_association" "public" {
-  subnet_id      = aws_subnet.public.id
+resource "aws_route_table_association" "public_1" {
+  subnet_id      = aws_subnet.public_1.id
+  route_table_id = aws_route_table.public.id
+}
+
+resource "aws_route_table_association" "public_2" {
+  subnet_id      = aws_subnet.public_2.id
   route_table_id = aws_route_table.public.id
 }
 
