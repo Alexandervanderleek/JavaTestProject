@@ -26,7 +26,7 @@ security:
     token-validity-in-seconds: 86400
   oauth2:
     google:
-      client-id: ${GOOGLE_CLIENT_ID:897562973691-e4hice78vphctfj481fbm1un04oo9d11.apps.googleusercontent.com}
+      client-id: ${GOOGLE_CLIENT_ID:your_google_client_id}
 
 logging:
   level:
