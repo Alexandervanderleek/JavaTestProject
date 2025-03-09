@@ -18,10 +18,11 @@ spring:
 server:
   port: 8080
   servlet:
-    context-path: /api
+    context-path: /
 
 security:
   jwt:
+    secret: ${JWT_SECRET:supersecretkeysupersecretkeysupersecretkeysupersecretkey}
     token-validity-in-seconds: 86400
   oauth2:
     google:

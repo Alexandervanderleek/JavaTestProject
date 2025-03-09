@@ -1,5 +1,6 @@
 package com.taskmanagement.repository;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,5 +10,6 @@ import com.taskmanagement.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-    // Query methods will be implemented later
+    Optional<User> findByEmail(String email);
+    Optional<User> findByGoogleId(String googleId);
 }
