@@ -1,0 +1,193 @@
+classDiagram
+    class Application {
+        +main()
+    }
+    
+    class SecurityConfig {
+        +configureGoogleOAuth()
+        +configureJWT()
+        +configureAuthorization()
+    }
+    
+    class AuthController {
+        +login(GoogleToken)
+        +refreshToken(JWT)
+    }
+    
+    class UserController {
+        +getCurrentUser()
+        +getUsers(role)
+    }
+    
+    class TaskController {
+        +getTasks(filters)
+        +getTask(id)
+        +createTask(TaskDTO)
+        +updateTask(id, TaskDTO)
+        +deleteTask(id)
+        +addComment(id, CommentDTO)
+    }
+    
+    class EpicController {
+        +getEpics(filters)
+        +getEpic(id)
+        +createEpic(EpicDTO)
+        +updateEpic(id, EpicDTO)
+        +deleteEpic(id, deleteTasksFlag)
+    }
+    
+    class SprintController {
+        +getSprints(filters)
+        +getSprint(id)
+        +createSprint(SprintDTO)
+        +updateSprint(id, SprintDTO)
+        +deleteSprint(id)
+    }
+    
+    class AuthService {
+        +authenticateWithGoogle(token)
+        +generateJWT(user)
+        +validateToken(token)
+        +refreshToken(token)
+    }
+    
+    class UserService {
+        +findCurrentUser()
+        +findAllUsers(role)
+        +findById(id)
+        +createIfNotExists(GoogleUserInfo)
+    }
+    
+    class TaskService {
+        +findAll(filters)
+        +findById(id)
+        +create(TaskDTO)
+        +update(id, TaskDTO)
+        +delete(id)
+        +addComment(id, CommentDTO)
+    }
+    
+    class EpicService {
+        +findAll(filters)
+        +findById(id)
+        +create(EpicDTO)
+        +update(id, EpicDTO)
+        +delete(id, deleteTasksFlag)
+    }
+    
+    class SprintService {
+        +findAll(filters)
+        +findById(id)
+        +create(SprintDTO)
+        +update(id, SprintDTO)
+        +delete(id)
+    }
+    
+    class UserRepository {
+        +findById(id)
+        +findByEmail(email)
+        +findByGoogleId(googleId)
+        +findByRole(roleId)
+        +save(User)
+    }
+    
+    class TaskRepository {
+        +findAll()
+        +findById(id)
+        +findByAssignedToId(userId)
+        +findByCreatedById(userId)
+        +findByEpicId(epicId)
+        +findBySprintId(sprintId)
+        +findByStatusId(statusId)
+        +findByPriorityId(priorityId)
+        +save(Task)
+        +deleteById(id)
+    }
+    
+    class EpicRepository {
+        +findAll()
+        +findById(id)
+        +findByOwnerId(userId)
+        +save(Epic)
+        +deleteById(id)
+    }
+    
+    class SprintRepository {
+        +findAll()
+        +findById(id)
+        +findByActive(isActive)
+        +save(Sprint)
+        +deleteById(id)
+    }
+
+    Application --> SecurityConfig
+    Application --> AuthController
+    Application --> UserController
+    Application --> TaskController
+    Application --> EpicController
+    Application --> SprintController
+    
+    AuthController --> AuthService
+    AuthController --> UserService
+    UserController --> UserService
+    TaskController --> TaskService
+    EpicController --> EpicService
+    SprintController --> SprintService
+    
+    AuthService --> UserService
+    TaskService --> TaskRepository
+    TaskService --> UserRepository
+    EpicService --> EpicRepository
+    EpicService --> TaskRepository
+    SprintService --> SprintRepository
+    UserService --> UserRepository
+    
+    class DTO {
+        <<interface>>
+    }
+    
+    class TaskDTO {
+        +epicId
+        +sprintId
+        +assignedToId
+        +priorityId
+        +title
+        +description
+        +statusId
+        +storyPoints
+        +estimatedHours
+        +dueDate
+    }
+    
+    class EpicDTO {
+        +name
+        +description
+        +ownerId
+        +storyPoints
+        +startDate
+        +targetEndDate
+    }
+    
+    class SprintDTO {
+        +name
+        +goal
+        +scrumMasterId
+        +capacityPoints
+        +startDate
+        +endDate
+        +isActive
+    }
+    
+    class CommentDTO {
+        +content
+    }
+    
+    DTO <|-- TaskDTO
+    DTO <|-- EpicDTO
+    DTO <|-- SprintDTO
+    DTO <|-- CommentDTO
+    
+    TaskService --> TaskDTO
+    EpicService --> EpicDTO
+    SprintService --> SprintDTO
+    TaskService --> CommentDTO

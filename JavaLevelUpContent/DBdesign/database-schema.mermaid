@@ -1,0 +1,96 @@
+erDiagram
+    ROLES ||--o{ USERS : "has"
+    USERS ||--o{ TASKS : "is assigned to"
+    USERS ||--o{ TASKS : "creates"
+    USERS ||--o{ EPICS : "owns"
+    USERS ||--o{ SPRINTS : "is scrum master"
+    EPICS ||--o{ TASKS : "contains"
+    SPRINTS ||--o{ TASKS : "includes"
+    TASKS ||--o{ TASK_COMMENTS : "has"
+    TASK_STATUS ||--o{ TASKS : "defines"
+    TASK_PRIORITY ||--o{ TASKS : "has"
+    
+    ROLES {
+        uuid id PK
+        string name
+        string description
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    USERS {
+        uuid id PK
+        uuid role_id FK
+        string email
+        string name
+        string google_id
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    EPICS {
+        uuid id PK
+        string name
+        text description
+        uuid owner_id FK
+        int story_points
+        timestamp start_date
+        timestamp target_end_date
+        timestamp actual_end_date
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    SPRINTS {
+        uuid id PK
+        string name
+        text goal
+        uuid scrum_master_id FK
+        int capacity_points
+        timestamp start_date
+        timestamp end_date
+        boolean is_active
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    TASKS {
+        uuid id PK
+        uuid epic_id FK "nullable"
+        uuid sprint_id FK "nullable" 
+        uuid created_by_id FK
+        uuid assigned_to_id FK
+        uuid priority_id FK
+        string title
+        text description
+        uuid status_id FK
+        int story_points
+        int estimated_hours
+        timestamp due_date
+        timestamp completed_at
+        timestamp created_at
+        timestamp updated_at
+    }
+    
+    TASK_STATUS {
+        uuid id PK
+        string name
+        string description
+        int display_order
+    }
+    
+    TASK_PRIORITY {
+        uuid id PK
+        string name
+        string description
+        int value
+    }
+    
+    TASK_COMMENTS {
+        uuid id PK
+        uuid task_id FK
+        uuid user_id FK
+        text content
+        timestamp created_at
+        timestamp updated_at
+    }

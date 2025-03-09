@@ -1,0 +1,96 @@
+erDiagram
+    ROLES ||--o{ USERS : "has"
+    USERS ||--o{ TASKS : "is assigned to"
+    USERS ||--o{ TASKS : "creates"
+    USERS ||--o{ EPICS : "owns"
+    USERS ||--o{ SPRINTS : "is scrum master"
+    EPICS ||--o{ TASKS : "contains"
+    SPRINTS ||--o{ TASKS : "includes"
+    TASKS ||--o{ TASK_COMMENTS : "has"
+    TASK_STATUS ||--o{ TASKS : "defines"
+    TASK_PRIORITY ||--o{ TASKS : "has"
+    
+    ROLES {
+        uuid id PK "NOT NULL"
+        string name "NOT NULL"
+        string description "NOT NULL"
+        timestamp created_at "NOT NULL"
+        timestamp updated_at "NOT NULL"
+    }
+    
+    USERS {
+        uuid id PK "NOT NULL"
+        uuid role_id FK "NOT NULL"
+        string email "NOT NULL UNIQUE"
+        string name "NOT NULL"
+        string google_id "NOT NULL UNIQUE"
+        timestamp created_at "NOT NULL"
+        timestamp updated_at "NOT NULL"
+    }
+    
+    EPICS {
+        uuid id PK "NOT NULL"
+        string name "NOT NULL"
+        text description "NOT NULL"
+        uuid owner_id FK "NOT NULL"
+        int story_points "NOT NULL"
+        timestamp start_date "NOT NULL"
+        timestamp target_end_date "NOT NULL"
+        timestamp actual_end_date "NULL"
+        timestamp created_at "NOT NULL"
+        timestamp updated_at "NOT NULL"
+    }
+    
+    SPRINTS {
+        uuid id PK "NOT NULL"
+        string name "NOT NULL"
+        text goal "NOT NULL"
+        uuid scrum_master_id FK "NOT NULL"
+        int capacity_points "NOT NULL"
+        timestamp start_date "NOT NULL"
+        timestamp end_date "NOT NULL"
+        boolean is_active "NOT NULL"
+        timestamp created_at "NOT NULL"
+        timestamp updated_at "NOT NULL"
+    }
+    
+    TASKS {
+        uuid id PK "NOT NULL"
+        uuid epic_id FK "NULL"
+        uuid sprint_id FK "NULL" 
+        uuid created_by_id FK "NOT NULL"
+        uuid assigned_to_id FK "NOT NULL"
+        uuid priority_id FK "NOT NULL"
+        string title "NOT NULL"
+        text description "NOT NULL"
+        uuid status_id FK "NOT NULL"
+        int story_points "NOT NULL"
+        int estimated_hours "NOT NULL"
+        timestamp due_date "NOT NULL"
+        timestamp completed_at "NULL"
+        timestamp created_at "NOT NULL"
+        timestamp updated_at "NOT NULL"
+    }
+    
+    TASK_STATUS {
+        uuid id PK "NOT NULL"
+        string name "NOT NULL UNIQUE"
+        string description "NOT NULL"
+        int display_order "NOT NULL"
+    }
+    
+    TASK_PRIORITY {
+        uuid id PK "NOT NULL"
+        string name "NOT NULL UNIQUE"
+        string description "NOT NULL"
+        int value "NOT NULL"
+    }
+    
+    TASK_COMMENTS {
+        uuid id PK "NOT NULL"
+        uuid task_id FK "NOT NULL"
+        uuid user_id FK "NOT NULL"
+        text content "NOT NULL"
+        timestamp created_at "NOT NULL"
+        timestamp updated_at "NOT NULL"
+    }
